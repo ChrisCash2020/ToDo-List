@@ -4,9 +4,45 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Todo-List</title>
   </head>
   <body>
-    <div></div>
+    <h1 class="title"><i class="fas fa-check-double"></i> Todo List</h1>
+    <div class="main">
+      <div class="aside">
+        <div class="constant-content">
+          <h3 class="btns active color-change">
+            <i class="fas fa-inbox"></i> &nbspInbox
+          </h3>
+          <h3 class="btns active">
+            <i class="fas fa-calendar-day"></i> &nbspToday
+          </h3>
+          <h3 class="btns active">
+            <i class="fas fa-calendar-week"></i> &nbspThis week
+          </h3>
+        </div>
+        <div class="project-content">
+          <h2 class="project-head">Projects</h2>
+          <div class="project-container"></div>
+          <h3 class="add-project">
+            <i class="fas fa-plus"></i> &nbsp&nbspAdd Project
+          </h3>
+        </div>
+      </div>
+      <div class="section">
+        <div class="tab">
+          <h1 class="section-title">Inbox</h1>
+          <h3 class="add-task">
+            <i class="fas fa-plus"></i> &nbsp&nbspAdd task
+          </h3>
+        </div>
+        <div class="tab" style="display: none">
+          <h1 class="section-title">Today</h1>
+        </div>
+        <div class="tab" style="display: none">
+          <h1 class="section-title">This week</h1>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
