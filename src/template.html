@@ -27,6 +27,14 @@
           <h3 class="add-project">
             <i class="fas fa-plus"></i> &nbsp&nbspAdd Project
           </h3>
+          <form class="project-form hide">
+            <input type="text" name="title" placeholder="Title" id="title" />
+            <p>*Project title is required*</p>
+            <div class="btn-container">
+              <input type="submit" value="Add" id="submit" />
+              <input type="submit" value="Cancel" id="cancel-submit" />
+            </div>
+          </form>
         </div>
       </div>
       <div class="section">
@@ -42,6 +50,7 @@
         <div class="tab" style="display: none">
           <h1 class="section-title">This week</h1>
         </div>
+        <div class="tab-container"></div>
       </div>
     </div>
   </body>
