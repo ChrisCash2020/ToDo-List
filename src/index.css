@@ -74,7 +74,8 @@ form {
   justify-content: center;
   padding: 10px;
 }
-#title {
+#title,
+#date {
   width: 100%;
   padding: 10px;
   font-size: 1rem;
@@ -107,10 +108,12 @@ form {
 .hide {
   display: none;
 }
-#title + p {
+#title + p,
+#date + p {
   margin-bottom: 3vh;
 }
-#title + p {
+#title + p,
+#date + p {
   font-size: 0.9rem;
   font-weight: bold;
   text-align: center;
@@ -119,7 +122,8 @@ form {
   height: 0;
   margin-bottom: 1vh;
 }
-#title.invalid + p {
+#title.invalid + p,
+#date.invalid + p {
   opacity: 1;
   height: auto;
 }
@@ -128,7 +132,8 @@ form {
   flex-direction: column;
   width: 100%;
 }
-.project-div {
+.project-div,
+.special {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -137,4 +142,5 @@ form {
 }
 .remove {
   transform: rotate(45deg);
+  margin-right: 10px;
 }
