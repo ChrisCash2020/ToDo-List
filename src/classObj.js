@@ -19,7 +19,9 @@ class Task {
     let h3 = document.createElement('h3');
     let todayH3 = document.createElement('h3');
     let thisWeekH3 = document.createElement('h3');
-    h3.classList.add('special', `${x.projectTitle}`);
+    let tempTitle = x.taskTitle.concat(x.projectTitle);
+    tempTitle = tempTitle.replace(/\s/g, '-');
+    h3.classList.add('special', `${tempTitle}`);
     let theTitle = document.createElement('div');
     let theText = document.createElement('i');
     theText.textContent = `${x.taskTitle}`;
@@ -38,7 +40,7 @@ class Task {
       e.preventDefault();
       removeTaskInLS(x.taskTitle);
       localStorage.setItem('myProjects', JSON.stringify(myProjects));
-      let allElements = document.querySelectorAll(`h3.${x.projectTitle}`);
+      let allElements = document.querySelectorAll(`h3.${tempTitle}`);
       allElements.forEach((element) => element.remove());
     });
     taskItems[x.taskIndex].appendChild(h3);
@@ -52,7 +54,7 @@ class Task {
     console.log(nxtWeek);
     console.log(today);
     if (today === theDate.textContent) {
-      todayH3.classList.add('special', `${x.projectTitle}`);
+      todayH3.classList.add('special', `${tempTitle}`);
       let theTitle = document.createElement('div');
       let theText = document.createElement('i');
       theText.textContent = `${x.taskTitle} (${x.projectTitle})`;
@@ -71,7 +73,7 @@ class Task {
         e.preventDefault();
         removeTaskInLS(x.taskTitle);
         localStorage.setItem('myProjects', JSON.stringify(myProjects));
-        let allElements = document.querySelectorAll(`.${x.projectTitle}`);
+        let allElements = document.querySelectorAll(`h3.${tempTitle}`);
         allElements.forEach((element) => element.remove());
       });
       taskItems[0].appendChild(todayH3);
@@ -84,7 +86,7 @@ class Task {
     var d2 = new Date(D_2[2], parseInt(D_2[1]) - 1, D_2[0]);
     var d3 = new Date(D_3[2], parseInt(D_3[1]) - 1, D_3[0]);
     if (d3 >= d1 && d3 <= d2) {
-      thisWeekH3.classList.add('special', `${x.projectTitle}`);
+      thisWeekH3.classList.add('special', `${tempTitle}`);
       let theTitle = document.createElement('div');
       let theText = document.createElement('i');
       theText.textContent = `${x.taskTitle} (${x.projectTitle})`;
@@ -102,9 +104,9 @@ class Task {
       removeIcon.addEventListener('click', (e) => {
         e.preventDefault();
         removeTaskInLS(x.taskTitle);
-        let allElements = document.querySelectorAll(`.${x.projectTitle}`);
-        allElements.forEach((element) => element.remove());
         localStorage.setItem('myProjects', JSON.stringify(myProjects));
+        let allElements = document.querySelectorAll(`h3.${tempTitle}`);
+        allElements.forEach((element) => element.remove());
       });
       taskItems[1].appendChild(thisWeekH3);
     }
