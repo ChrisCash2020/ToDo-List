@@ -5,28 +5,28 @@ if (localStorage.getItem('myProjects') === null) {
 } else {
   myProjects = JSON.parse(localStorage.getItem('myProjects'));
 }
-let myTasks;
-if (localStorage.getItem('myTasks') === null) {
-  myTasks = [];
-} else {
-  myTasks = JSON.parse(localStorage.getItem('myTasks'));
-}
 class Task {
-  constructor(title, date, taskIndex) {
-    (this.title = title), (this.date = date), (this.taskIndex = taskIndex);
+  constructor(taskTitle, date, taskIndex, projectTitle) {
+    (this.taskTitle = taskTitle),
+      (this.date = date),
+      (this.taskIndex = taskIndex),
+      (this.projectTitle = projectTitle);
   }
   addItem(x) {
     if (x === undefined) x = this;
-    localStorage.setItem('myTasks', JSON.stringify(myTasks));
+    localStorage.setItem('myProjects', JSON.stringify(myProjects));
+    let taskItems = document.querySelectorAll('.task-items');
     let h3 = document.createElement('h3');
+    let todayH3 = document.createElement('h3');
+    let thisWeekH3 = document.createElement('h3');
     h3.classList.add('special');
     let theTitle = document.createElement('div');
     let theText = document.createElement('i');
-    theText.textContent = `${x.title}`;
+    theText.textContent = `${x.taskTitle}`;
     let theDate = document.createElement('i');
-    const day = x.date.split('-')[0];
+    const year = x.date.split('-')[0];
     const month = x.date.split('-')[1];
-    const year = x.date.split('-')[2];
+    const day = x.date.split('-')[2];
     theDate.textContent = `${month}/${day}/${year}`;
     let removeIcon = document.createElement('i');
     removeIcon.classList.add('far', 'fa-circle', 'remove');
@@ -36,23 +36,87 @@ class Task {
     h3.appendChild(theDate);
     removeIcon.addEventListener('click', (e) => {
       e.preventDefault();
-      removeItemInLS(x, myTasks, 'myTasks');
-      localStorage.setItem('myTasks', JSON.stringify(myTasks));
+      removeTaskInLS(x.taskTitle);
+      localStorage.setItem('myProjects', JSON.stringify(myProjects));
       h3.remove();
+      todayH3.remove();
+      thisWeekH3.remove();
     });
-    let taskItems = document.querySelectorAll('.task-items');
-    console.log(taskItems);
-    console.log(x.taskIndex);
-    taskItems.forEach((task, task_i) => {
-      if (task_i === x.taskIndex) {
-        task.appendChild(h3);
-      }
-    });
+    taskItems[x.taskIndex].appendChild(h3);
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0');
+    let yyyy = today.getFullYear();
+    let dd2 = String(today.getDate() + 7).padStart(2, '0');
+    today = mm + '/' + dd + '/' + yyyy;
+    let nxtWeek = mm + '/' + dd2 + '/' + yyyy;
+    console.log(nxtWeek);
+    console.log(today);
+    if (today === theDate.textContent) {
+      todayH3.classList.add('special');
+      let theTitle = document.createElement('div');
+      let theText = document.createElement('i');
+      theText.textContent = `${x.taskTitle} (${x.projectTitle})`;
+      let theDate = document.createElement('i');
+      const year = x.date.split('-')[0];
+      const month = x.date.split('-')[1];
+      const day = x.date.split('-')[2];
+      theDate.textContent = `${month}/${day}/${year}`;
+      let removeIcon = document.createElement('i');
+      removeIcon.classList.add('far', 'fa-circle', 'remove');
+      theTitle.appendChild(removeIcon);
+      theTitle.appendChild(theText);
+      todayH3.appendChild(theTitle);
+      todayH3.appendChild(theDate);
+      removeIcon.addEventListener('click', (e) => {
+        e.preventDefault();
+        removeTaskInLS(x.taskTitle);
+        localStorage.setItem('myProjects', JSON.stringify(myProjects));
+        h3.remove();
+        todayH3.remove();
+        thisWeekH3.remove();
+      });
+      taskItems[0].appendChild(todayH3);
+    }
+    let Date_to_check = `${month}/${day}/${year}`;
+    let D_1 = today.split('/');
+    let D_2 = nxtWeek.split('/');
+    let D_3 = Date_to_check.split('/');
+    var d1 = new Date(D_1[2], parseInt(D_1[1]) - 1, D_1[0]);
+    var d2 = new Date(D_2[2], parseInt(D_2[1]) - 1, D_2[0]);
+    var d3 = new Date(D_3[2], parseInt(D_3[1]) - 1, D_3[0]);
+    if (d3 >= d1 && d3 <= d2) {
+      thisWeekH3.classList.add('special');
+      let theTitle = document.createElement('div');
+      let theText = document.createElement('i');
+      theText.textContent = `${x.taskTitle} (${x.projectTitle})`;
+      let theDate = document.createElement('i');
+      const year = x.date.split('-')[0];
+      const month = x.date.split('-')[1];
+      const day = x.date.split('-')[2];
+      theDate.textContent = `${month}/${day}/${year}`;
+      let removeIcon = document.createElement('i');
+      removeIcon.classList.add('far', 'fa-circle', 'remove');
+      theTitle.appendChild(removeIcon);
+      theTitle.appendChild(theText);
+      thisWeekH3.appendChild(theTitle);
+      thisWeekH3.appendChild(theDate);
+      removeIcon.addEventListener('click', (e) => {
+        e.preventDefault();
+        removeTaskInLS(x.taskTitle);
+        h3.remove();
+        todayH3.remove();
+        thisWeekH3.remove();
+        localStorage.setItem('myProjects', JSON.stringify(myProjects));
+      });
+      taskItems[1].appendChild(thisWeekH3);
+    }
   }
 }
 class Project {
   constructor(title) {
     this.title = title;
+    this.tasks = [];
   }
   addItem(x) {
     if (x === undefined) x = this;
@@ -86,17 +150,43 @@ class Project {
     tabTaskItems.classList.add('task-items');
     let tabAddTasks = document.createElement('h3');
     tabAddTasks.classList.add('add-task');
-    tabAddTasks.innerHTML = `<i class="fas fa-plus"></i> &nbsp&nbspAdd task`;
+    let plusIcon = document.createElement('i');
+    plusIcon.classList.add('fas', 'fa-plus');
+    let tabAddTasksText = document.createElement('p');
+    tabAddTasksText.textContent = 'Add task';
+    tabAddTasks.appendChild(plusIcon);
+    tabAddTasks.appendChild(tabAddTasksText);
     let tabForm = document.createElement('form');
     tabForm.classList.add('task-form', 'hide');
-    tabForm.innerHTML = `<input type="text" name="title" placeholder="Task" id="title" />
-            <p>*Title required & No duplicates*</p>
-            <input type="date" placeholder="Add date" id="date" />
-            <p>*Task Date is required*</p>
-            <div class="btn-container">
-              <input type="submit" value="Add" id="submit" />
-              <input type="submit" value="Cancel" id="cancel-submit" />
-            </div>`;
+    let tabFormTextInput = document.createElement('input');
+    tabFormTextInput.type = 'text';
+    tabFormTextInput.placeholder = 'Task';
+    tabFormTextInput.id = 'title';
+    tabForm.appendChild(tabFormTextInput);
+    let textInputP = document.createElement('p');
+    textInputP.textContent = '*Title required & No duplicates*';
+    tabForm.appendChild(textInputP);
+    let tabFormDateInput = document.createElement('input');
+    tabFormDateInput.type = 'date';
+    tabFormDateInput.placeholder = 'Add date';
+    tabFormDateInput.id = 'date';
+    tabForm.appendChild(tabFormDateInput);
+    let dateInputP = document.createElement('p');
+    dateInputP.textContent = '*Task Date is required*';
+    tabForm.appendChild(dateInputP);
+    let formBtnContainer = document.createElement('div');
+    formBtnContainer.classList.add('btn-container');
+    let formBtnContainerSubmit = document.createElement('input');
+    formBtnContainerSubmit.type = 'Submit';
+    formBtnContainerSubmit.value = 'Add';
+    formBtnContainerSubmit.id = 'submit';
+    formBtnContainer.appendChild(formBtnContainerSubmit);
+    let formBtnContainerCancel = document.createElement('input');
+    formBtnContainerCancel.type = 'Submit';
+    formBtnContainerCancel.value = 'Cancel';
+    formBtnContainerCancel.id = 'cancel-submit';
+    formBtnContainer.appendChild(formBtnContainerCancel);
+    tabForm.appendChild(formBtnContainer);
     tabSectionTitle.classList.add('section-title');
     projectTab.appendChild(tabSectionTitle);
     projectTab.appendChild(tabTaskItems);
@@ -104,6 +194,14 @@ class Project {
     projectTab.appendChild(tabForm);
     projectContainer.appendChild(projectBtn);
     section.appendChild(projectTab);
+    addItemForm(tabAddTasks, tabForm);
+    cancelItemForm(
+      formBtnContainerCancel,
+      tabAddTasks,
+      tabForm,
+      tabFormTextInput,
+      tabFormDateInput
+    );
     removeIcon.addEventListener('click', (e) => {
       e.preventDefault();
       removeItemInLS(x, myProjects, 'myProjects');
@@ -124,6 +222,16 @@ class Project {
         tabs.forEach((content, content_i) => {
           if (content_i == btn_i) {
             content.style.display = 'block';
+            submitTaskForm(
+              formBtnContainerSubmit,
+              tabAddTasks,
+              tabForm,
+              tabFormTextInput,
+              tabFormDateInput,
+              btn_i,
+              x.tasks,
+              x.title
+            );
           } else {
             content.style.display = 'none';
           }
@@ -157,7 +265,7 @@ function cancelItemForm(
     itemForm.reset();
   });
 }
-const array = ['Inbox', 'Today', 'This week'];
+const array = ['Today', 'This week'];
 function submitProjectForm(submitItem, itemFormTitle, item, itemForm) {
   submitItem.addEventListener('click', (e) => {
     e.preventDefault();
@@ -182,27 +290,30 @@ function submitProjectForm(submitItem, itemFormTitle, item, itemForm) {
     }
   });
 }
-
 function submitTaskForm(
   submitItem,
-  itemFormTitle,
-  mainitem,
+  item,
   itemForm,
+  itemFormTitle,
   itemFormDate,
-  index
+  itemElement,
+  myItem,
+  projectTitle
 ) {
   submitItem.addEventListener('click', (e) => {
     e.preventDefault();
     let dateVal = itemFormDate.value;
     let titleVal = itemFormTitle.value;
-    let test = myTasks.some((element) => element.title === itemFormTitle.value);
+    let test = myItem.some(
+      (element) => element.taskTitle === itemFormTitle.value
+    );
     let test1 = array.some((element) => element === itemFormTitle.value);
     if (
       (titleVal.length > 0 &&
         test === false &&
         test1 === false &&
         dateVal.length > 0) ||
-      (myTasks.length === 0 &&
+      (myItem.length === 0 &&
         titleVal.length > 0 &&
         dateVal.length > 0 &&
         test1 === false)
@@ -210,17 +321,21 @@ function submitTaskForm(
       let newTaskItem = new Task(
         itemFormTitle.value,
         itemFormDate.value,
-        index
+        itemElement,
+        projectTitle
       );
-      storItemInLS(newTaskItem, myTasks, 'myTasks');
       itemForm.reset();
-      mainitem.classList.toggle('hide');
+      myItem.push(newTaskItem);
+      item.classList.toggle('hide');
       itemForm.classList.toggle('hide');
-      return newTaskItem.addItem();
+      newTaskItem.addItem();
+      localStorage.setItem('myProjects', JSON.stringify(myProjects));
     } else {
       if (titleVal.length <= 0) {
         itemFormTitle.classList.add('invalid');
-      } else if (titleVal.length > 0) {
+      } else if (titleVal.length > 0 && test === true) {
+        itemFormTitle.classList.add('invalid');
+      } else if (titleVal.length > 0 && test === false) {
         itemFormTitle.classList.remove('invalid');
       }
       if (dateVal.length <= 0) {
@@ -244,30 +359,6 @@ submitProjectForm(
   projectForm
 );
 cancelItemForm(cancelProjectBtn, addProjectBtn, projectForm, formProjectTitle);
-let addTaskBtn = document.querySelectorAll('.add-task');
-let taskForm = document.querySelectorAll('.task-form');
-let cancelTaskBtn = document.querySelectorAll('.task-form #cancel-submit');
-let submitTaskBtn = document.querySelectorAll('.task-form #submit');
-let formTaskTitle = document.querySelectorAll('.task-form #title');
-let formTaskDate = document.querySelectorAll('.task-form #date');
-addTaskBtn.forEach((addTask, i) => {
-  addItemForm(addTaskBtn[i], taskForm[i]);
-  submitTaskForm(
-    submitTaskBtn[i],
-    formTaskTitle[i],
-    addTaskBtn[i],
-    taskForm[i],
-    formTaskDate[i],
-    i
-  );
-  cancelItemForm(
-    cancelTaskBtn[i],
-    addTaskBtn[i],
-    taskForm[i],
-    formTaskTitle[i],
-    formTaskDate[i]
-  );
-});
 function storItemInLS(item, myItem, string) {
   myItem.push(item);
   localStorage.setItem(`${string}`, JSON.stringify(myItem));
@@ -280,20 +371,29 @@ function removeItemInLS(listItem, myItem, string) {
   });
   localStorage.setItem(`${string}`, JSON.stringify(myItem));
 }
+function removeTaskInLS(itemTitle) {
+  myProjects.forEach((project) => {
+    let myTasks = project.tasks;
+    myTasks.map((element, index) => {
+      if (element.taskTitle === itemTitle) {
+        myTasks.splice(index, 1);
+      }
+    });
+  });
+  localStorage.setItem(`myProjects`, JSON.stringify(myProjects));
+}
 function getProjects() {
   myProjects.forEach((project) => {
     Object.setPrototypeOf(project, Project);
     project.prototype.addItem(project);
-  });
-}
-function getTasks() {
-  myTasks.forEach((task) => {
-    Object.setPrototypeOf(task, Task);
-    task.prototype.addItem(task);
+    let myTasks = project.tasks;
+    myTasks.forEach((task) => {
+      Object.setPrototypeOf(task, Task);
+      task.prototype.addItem(task);
+    });
   });
 }
 document.addEventListener('DOMContentLoaded', getProjects);
-document.addEventListener('DOMContentLoaded', getTasks);
 let btns = document.querySelectorAll('.btns');
 const tabs = document.querySelectorAll('.tab');
 btns.forEach((btn, btn_i) => {
@@ -313,4 +413,3 @@ btns.forEach((btn, btn_i) => {
     });
   });
 });
-let allProjectInput = document.querySelectorAll('.task-form > input');

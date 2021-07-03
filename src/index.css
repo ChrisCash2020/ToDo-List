@@ -42,7 +42,13 @@
   height: 100%;
 }
 .add-task {
-  text-align: center;
+  flex-direction: row;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.add-task i {
+  margin-right: 10px;
 }
 .section-title {
   font-size: 2rem;
