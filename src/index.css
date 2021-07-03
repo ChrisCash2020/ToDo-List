@@ -6,33 +6,54 @@
   padding: 0;
   font-family: 'Mulish', sans-serif;
 }
+html {
+  background-color: #eeeeee;
+}
 .title {
   width: 100vw;
   height: 150px;
   font-size: 4rem;
   color: white;
   background-color: #707070;
-  line-height: 1.7;
   padding: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.title-box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.title-box h1 {
+  margin-left: 20px;
+  font-size: 2.5rem;
+}
+button {
+  visibility: hidden;
+  background-color: transparent;
+  border: none;
+}
+button i {
+  font-size: 2.5rem;
+  color: #ffffff;
 }
 .main {
   display: flex;
   flex-direction: row;
   height: calc(100vh - 150px);
   width: 100vw;
-  background-color: #eeeeee;
 }
 .aside {
   display: flex;
   flex-direction: column;
   padding: 20px;
   background-color: #dddddd;
-  width: 18%;
-  height: 100%;
+  width: 300px;
 }
 .section {
   width: 55.5%;
-  /* height: 100%; */
   padding: 30px 40px;
 }
 .tab {
@@ -149,4 +170,52 @@ form {
 .remove {
   transform: rotate(45deg);
   margin-right: 10px;
+}
+.aside,
+.constant-content,
+.project-container {
+  transition: visiblilty 0.45s ease-in-out 50ms;
+}
+@media (max-width: 700px) {
+  .section {
+    width: 100%;
+    padding: 30px 20px;
+  }
+}
+@media (max-width: 650px) {
+  .main {
+    flex-direction: column;
+  }
+  .aside {
+    width: 100%;
+  }
+  .aside.aside-alter {
+    color: transparent;
+    visibility: hidden;
+    height: 0px;
+    padding: 0px;
+  }
+  .constant-content.content-alter,
+  .project-container.content-alter {
+    color: transparent;
+    height: 0px;
+    padding: 0;
+    visibility: hidden;
+  }
+  button {
+    visibility: visible;
+  }
+}
+@media (max-width: 479px) {
+  .title {
+    width: 479px;
+  }
+  .main {
+    align-items: stretch;
+    width: 479px;
+  }
+  body {
+    align-items: stretch;
+    width: 479px;
+  }
 }
