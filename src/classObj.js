@@ -19,9 +19,11 @@ class Task {
     let h3 = document.createElement('h3');
     let todayH3 = document.createElement('h3');
     let thisWeekH3 = document.createElement('h3');
-    let tempTitle = x.taskTitle.concat(x.projectTitle);
+    let tempTitle = x.taskTitle;
     tempTitle = tempTitle.replace(/\s/g, '-');
-    h3.classList.add('special', `${tempTitle}`);
+    let tempProjTitle = x.projectTitle;
+    tempProjTitle = tempProjTitle.replace(/\s/g, '-');
+    h3.classList.add('special', `${tempTitle}`, `${tempProjTitle}`);
     let theTitle = document.createElement('div');
     let theText = document.createElement('i');
     theText.textContent = `${x.taskTitle}`;
@@ -205,7 +207,9 @@ class Project {
       e.preventDefault();
       removeItemInLS(x, myProjects, 'myProjects');
       localStorage.setItem('myProjects', JSON.stringify(myProjects));
-      let allElements = document.querySelectorAll(`.${x.title}`);
+      let tempTitle = x.title;
+      tempTitle = tempTitle.replace(/\s/g, '-');
+      let allElements = document.querySelectorAll(`taks-items h3.${tempTitle}`);
       allElements.forEach((element) => element.remove());
       localStorage.setItem('myProjects', JSON.stringify(myProjects));
       projectBtn.remove();
