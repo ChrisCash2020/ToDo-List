@@ -6,6 +6,42 @@ import {
 import { myProjects, removeItemInLS, removeTaskInLS } from './storage.js';
 //created two classes one for projects and one for tasks
 //the project class will need an array to store the elements created from the task class
+function makeTask(taskT, projectT, index, dateX) {
+  let taskItems = document.querySelectorAll('.task-items');
+  let h3 = document.createElement('h3');
+  let tempTitle = taskT;
+  tempTitle = tempTitle.replace(/\s/g, '-');
+  //im using classes to keep track of each project title and task title so i can alter them need be
+  let tempProjTitle = projectT;
+  tempProjTitle = tempProjTitle.replace(/\s/g, '-');
+  h3.classList.add('special', `${tempTitle}`, `${tempProjTitle}`);
+  //gonna add classes with the task title and project title
+  //task title for deleting each task on a click
+  //project title for deleting all the tasks associated with the project title
+  let theTitle = document.createElement('div');
+  let theText = document.createElement('i');
+  theText.textContent = `${taskT}`;
+  let theDate = document.createElement('i');
+  const year = dateX.split('-')[0];
+  const month = dateX.split('-')[1];
+  const day = dateX.split('-')[2];
+  theDate.textContent = `${month}/${day}/${year}`;
+  let removeIcon = document.createElement('i');
+  removeIcon.classList.add('fas', 'fa-minus', 'icon');
+  theTitle.appendChild(removeIcon);
+  theTitle.appendChild(theText);
+  h3.appendChild(theTitle);
+  h3.appendChild(theDate);
+  removeIcon.addEventListener('click', (e) => {
+    e.preventDefault();
+    removeTaskInLS(taskT);
+    localStorage.setItem('myProjects', JSON.stringify(myProjects));
+    let allElements = document.querySelectorAll(`h3.${tempTitle}`);
+    //all tasks are deleted if on is dynamically
+    allElements.forEach((element) => element.remove());
+  });
+  taskItems[index].appendChild(h3);
+}
 class Task {
   constructor(taskTitle, date, taskIndex, projectTitle) {
     (this.taskTitle = taskTitle),
@@ -17,42 +53,7 @@ class Task {
     //theoretically there the tasks creation icon will need to be made three times if a cetain criteria is met
     if (x === undefined) x = this;
     localStorage.setItem('myProjects', JSON.stringify(myProjects));
-    let taskItems = document.querySelectorAll('.task-items');
-    let h3 = document.createElement('h3');
-    let todayH3 = document.createElement('h3');
-    let thisWeekH3 = document.createElement('h3');
-    let tempTitle = x.taskTitle;
-    tempTitle = tempTitle.replace(/\s/g, '-');
-    //im using classes to keep track of each project title and task title so i can alter them need be
-    let tempProjTitle = x.projectTitle;
-    tempProjTitle = tempProjTitle.replace(/\s/g, '-');
-    h3.classList.add('special', `${tempTitle}`, `${tempProjTitle}`);
-    //gonna add classes with the task title and project title
-    //task title for deleting each task on a click
-    //project title for deleting all the tasks associated with the project title
-    let theTitle = document.createElement('div');
-    let theText = document.createElement('i');
-    theText.textContent = `${x.taskTitle}`;
-    let theDate = document.createElement('i');
-    const year = x.date.split('-')[0];
-    const month = x.date.split('-')[1];
-    const day = x.date.split('-')[2];
-    theDate.textContent = `${month}/${day}/${year}`;
-    let removeIcon = document.createElement('i');
-    removeIcon.classList.add('fas', 'fa-minus', 'icon');
-    theTitle.appendChild(removeIcon);
-    theTitle.appendChild(theText);
-    h3.appendChild(theTitle);
-    h3.appendChild(theDate);
-    removeIcon.addEventListener('click', (e) => {
-      e.preventDefault();
-      removeTaskInLS(x.taskTitle);
-      localStorage.setItem('myProjects', JSON.stringify(myProjects));
-      let allElements = document.querySelectorAll(`h3.${tempTitle}`);
-      //all tasks are deleted if on is dynamically
-      allElements.forEach((element) => element.remove());
-    });
-    taskItems[x.taskIndex].appendChild(h3);
+    makeTask(x.taskTitle, x.projectTitle, x.taskIndex, x.date);
     let today = new Date();
     let dd = String(today.getDate()).padStart(2, '0');
     let mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -61,30 +62,12 @@ class Task {
     today = mm + '/' + dd + '/' + yyyy;
     let nxtWeek = mm + '/' + dd2 + '/' + yyyy;
     //found technique to compare dates on geeks for geeks
-    if (today === theDate.textContent) {
-      todayH3.classList.add('special', `${tempTitle}`);
-      let theTitle = document.createElement('div');
-      let theText = document.createElement('i');
-      theText.textContent = `${x.taskTitle} (${x.projectTitle})`;
-      let theDate = document.createElement('i');
-      const year = x.date.split('-')[0];
-      const month = x.date.split('-')[1];
-      const day = x.date.split('-')[2];
-      theDate.textContent = `${month}/${day}/${year}`;
-      let removeIcon = document.createElement('i');
-      removeIcon.classList.add('fas', 'fa-minus', 'icon');
-      theTitle.appendChild(removeIcon);
-      theTitle.appendChild(theText);
-      todayH3.appendChild(theTitle);
-      todayH3.appendChild(theDate);
-      removeIcon.addEventListener('click', (e) => {
-        e.preventDefault();
-        removeTaskInLS(x.taskTitle);
-        localStorage.setItem('myProjects', JSON.stringify(myProjects));
-        let allElements = document.querySelectorAll(`h3.${tempTitle}`);
-        allElements.forEach((element) => element.remove());
-      });
-      taskItems[0].appendChild(todayH3);
+    const year = x.date.split('-')[0];
+    const month = x.date.split('-')[1];
+    const day = x.date.split('-')[2];
+    let aDate = `${month}/${day}/${year}`;
+    if (today === aDate) {
+      makeTask(x.taskTitle, x.projectTitle, 0, x.date);
     }
     let Date_to_check = `${month}/${day}/${year}`;
     let D_1 = today.split('/');
@@ -94,29 +77,7 @@ class Task {
     var d2 = new Date(D_2[2], parseInt(D_2[1]) - 1, D_2[0]);
     var d3 = new Date(D_3[2], parseInt(D_3[1]) - 1, D_3[0]);
     if (d3 >= d1 && d3 <= d2) {
-      thisWeekH3.classList.add('special', `${tempTitle}`);
-      let theTitle = document.createElement('div');
-      let theText = document.createElement('i');
-      theText.textContent = `${x.taskTitle} (${x.projectTitle})`;
-      let theDate = document.createElement('i');
-      const year = x.date.split('-')[0];
-      const month = x.date.split('-')[1];
-      const day = x.date.split('-')[2];
-      theDate.textContent = `${month}/${day}/${year}`;
-      let removeIcon = document.createElement('i');
-      removeIcon.classList.add('fas', 'fa-minus', 'icon');
-      theTitle.appendChild(removeIcon);
-      theTitle.appendChild(theText);
-      thisWeekH3.appendChild(theTitle);
-      thisWeekH3.appendChild(theDate);
-      removeIcon.addEventListener('click', (e) => {
-        e.preventDefault();
-        removeTaskInLS(x.taskTitle);
-        localStorage.setItem('myProjects', JSON.stringify(myProjects));
-        let allElements = document.querySelectorAll(`h3.${tempTitle}`);
-        allElements.forEach((element) => element.remove());
-      });
-      taskItems[1].appendChild(thisWeekH3);
+      makeTask(x.taskTitle, x.projectTitle, 1, x.date);
     }
   }
 }
