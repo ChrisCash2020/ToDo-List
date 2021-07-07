@@ -18,6 +18,7 @@ function removeItemInLS(listItem, myItem, string) {
   localStorage.setItem(`${string}`, JSON.stringify(myItem));
 }
 function removeTaskInLS(itemTitle) {
+  //there is a multidimensional array inside the myprojects array that stores the tasks and so I need to do a foreach remove those items
   myProjects.forEach((project) => {
     let myTasks = project.tasks;
     myTasks.map((element, index) => {
@@ -29,6 +30,7 @@ function removeTaskInLS(itemTitle) {
   localStorage.setItem(`myProjects`, JSON.stringify(myProjects));
 }
 function getProjects() {
+  //there is a multidimensional array inside the myprojects array that stores the tasks and so I need to do a foreach save those items
   myProjects.forEach((project) => {
     Object.setPrototypeOf(project, Project);
     project.prototype.addItem(project);

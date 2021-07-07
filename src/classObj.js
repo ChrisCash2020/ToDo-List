@@ -4,7 +4,8 @@ import {
   submitTaskForm,
 } from './formFunctions.js';
 import { myProjects, removeItemInLS, removeTaskInLS } from './storage.js';
-
+//created two classes one for projects and one for tasks
+//the project class will need an array to store the elements created from the task class
 class Task {
   constructor(taskTitle, date, taskIndex, projectTitle) {
     (this.taskTitle = taskTitle),
@@ -13,6 +14,7 @@ class Task {
       (this.projectTitle = projectTitle);
   }
   addItem(x) {
+    //theoretically there the tasks creation icon will need to be made three times if a cetain criteria is met
     if (x === undefined) x = this;
     localStorage.setItem('myProjects', JSON.stringify(myProjects));
     let taskItems = document.querySelectorAll('.task-items');
@@ -21,9 +23,13 @@ class Task {
     let thisWeekH3 = document.createElement('h3');
     let tempTitle = x.taskTitle;
     tempTitle = tempTitle.replace(/\s/g, '-');
+    //im using classes to keep track of each project title and task title so i can alter them need be
     let tempProjTitle = x.projectTitle;
     tempProjTitle = tempProjTitle.replace(/\s/g, '-');
     h3.classList.add('special', `${tempTitle}`, `${tempProjTitle}`);
+    //gonna add classes with the task title and project title
+    //task title for deleting each task on a click
+    //project title for deleting all the tasks associated with the project title
     let theTitle = document.createElement('div');
     let theText = document.createElement('i');
     theText.textContent = `${x.taskTitle}`;
@@ -33,7 +39,7 @@ class Task {
     const day = x.date.split('-')[2];
     theDate.textContent = `${month}/${day}/${year}`;
     let removeIcon = document.createElement('i');
-    removeIcon.classList.add('far', 'fa-circle', 'remove');
+    removeIcon.classList.add('fas', 'fa-minus', 'icon');
     theTitle.appendChild(removeIcon);
     theTitle.appendChild(theText);
     h3.appendChild(theTitle);
@@ -43,6 +49,7 @@ class Task {
       removeTaskInLS(x.taskTitle);
       localStorage.setItem('myProjects', JSON.stringify(myProjects));
       let allElements = document.querySelectorAll(`h3.${tempTitle}`);
+      //all tasks are deleted if on is dynamically
       allElements.forEach((element) => element.remove());
     });
     taskItems[x.taskIndex].appendChild(h3);
@@ -53,8 +60,7 @@ class Task {
     let dd2 = String(today.getDate() + 7).padStart(2, '0');
     today = mm + '/' + dd + '/' + yyyy;
     let nxtWeek = mm + '/' + dd2 + '/' + yyyy;
-    console.log(nxtWeek);
-    console.log(today);
+    //found technique to compare dates on geeks for geeks
     if (today === theDate.textContent) {
       todayH3.classList.add('special', `${tempTitle}`);
       let theTitle = document.createElement('div');
@@ -66,7 +72,7 @@ class Task {
       const day = x.date.split('-')[2];
       theDate.textContent = `${month}/${day}/${year}`;
       let removeIcon = document.createElement('i');
-      removeIcon.classList.add('far', 'fa-circle', 'remove');
+      removeIcon.classList.add('fas', 'fa-minus', 'icon');
       theTitle.appendChild(removeIcon);
       theTitle.appendChild(theText);
       todayH3.appendChild(theTitle);
@@ -98,7 +104,7 @@ class Task {
       const day = x.date.split('-')[2];
       theDate.textContent = `${month}/${day}/${year}`;
       let removeIcon = document.createElement('i');
-      removeIcon.classList.add('far', 'fa-circle', 'remove');
+      removeIcon.classList.add('fas', 'fa-minus', 'icon');
       theTitle.appendChild(removeIcon);
       theTitle.appendChild(theText);
       thisWeekH3.appendChild(theTitle);
@@ -133,7 +139,8 @@ class Project {
     let removeIcon = document.createElement('i');
     let listIcon = document.createElement('i');
     listIcon.style.marginRight = '10px';
-    let projectText = document.createElement('h4');
+    let projectText = document.createElement('h5');
+    projectText.style.fontSize = '1rem';
     removeIcon.classList.add('fas', 'fa-plus', 'remove');
     listIcon.classList.add('fas', 'fa-tasks');
     projectDiv.appendChild(listIcon);

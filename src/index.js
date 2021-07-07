@@ -36,6 +36,7 @@ btns.forEach((btn, btn_i) => {
     });
   });
 });
+//basic tab switching function
 let logoBtn = document.querySelector('button');
 let aside = document.querySelector('.aside');
 let constContent = document.querySelector('.constant-content');
@@ -45,3 +46,4 @@ logoBtn.addEventListener('click', (e) => {
   constContent.classList.toggle('content-alter');
   projContent.classList.toggle('content-alter');
 });
+//for responsive design why in mobile view

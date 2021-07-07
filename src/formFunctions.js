@@ -8,8 +8,10 @@ import {
 import { Task, Project } from './classObj.js';
 
 function addItemForm(item, itemForm) {
+  //a function to add anvent listener to the project form or any created task forms later on
   item.addEventListener('click', (e) => {
     e.preventDefault();
+    //toggle is a good way to display and undisplay an item
     item.classList.toggle('hide');
     itemForm.classList.toggle('hide');
   });
@@ -21,6 +23,7 @@ function cancelItemForm(
   itemFormTitle,
   itemFormDate
 ) {
+  //instructions for when person backs out of form
   cancelItem.addEventListener('click', (e) => {
     e.preventDefault();
     item.classList.toggle('hide');
@@ -32,15 +35,17 @@ function cancelItemForm(
     itemForm.reset();
   });
 }
+//project and tasks need seperate functions because they won't work dynamically in the same function *dont know why
 function submitProjectForm(submitItem, itemFormTitle, item, itemForm) {
   submitItem.addEventListener('click', (e) => {
     e.preventDefault();
-    const array = ['Today', 'This week', 'btns', 'active'];
+    const array = ['Today', 'This week'];
     let titleVal = itemFormTitle.value;
     let test = myProjects.some(
       (element) => element.title === itemFormTitle.value
     );
     let test1 = array.some((element) => element === itemFormTitle.value);
+    //need tests to prove they aren't duplicates or restricted words
     if (
       (titleVal.length > 0 && test === false && test1 === false) ||
       (myProjects.length === 0 && titleVal.length > 0 && test1 === false)
@@ -97,6 +102,9 @@ function submitTaskForm(
       item.classList.toggle('hide');
       itemForm.classList.toggle('hide');
       newTaskItem.addItem();
+      itemFormTitle.classList.remove('invalid');
+      itemFormDate.classList.remove('invalid');
+
       localStorage.setItem('myProjects', JSON.stringify(myProjects));
     } else {
       if (titleVal.length <= 0) {

@@ -76,6 +76,7 @@ button i {
   margin: 10px;
 }
 h3,
+h4,
 .project-div {
   padding: 10px;
   border: 1px solid transparent;
@@ -85,6 +86,7 @@ h3,
   user-select: none;
 }
 h3:hover,
+h4:hover,
 .project-div:hover,
 .add-task:hover,
 .color-change {
@@ -169,6 +171,9 @@ form {
 }
 .remove {
   transform: rotate(45deg);
+  margin-right: 10px;
+}
+.icon {
   margin-right: 10px;
 }
 .aside,
